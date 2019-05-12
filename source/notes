@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+function display_help {
+	cat <<-EOF
+	Usage: `basename $0` COMMAND [ARGS...]
+
+	Commands:
+	  read		Print a note to STDOUT.
+	  write		Create or edit a note.
+	  list		List all the notes.
+	  move		Rename a note.
+	  remove	Delete a note.
+	  help		Display the help.
+	EOF
+}
+
+folder_path="$NOTES_PATH"
+if [[ -z $NOTES_PATH ]]; then
+	folder_path="$HOME/.notes"
+fi
+
+if ! [[ -d $folder_path ]]; then
+	mkdir -p $folder_path
+	echo "Create <$folder_path>."
+fi
+
+cd $folder_path
+
+case $1 in
+	read)
+		test -f ./$2 && cat "./$2";;
+	write)
+		dirs_path=$(dirname ./$2)
+		mkdir -p $dirs_path
+		$EDITOR "./$2"
+		rmdir $dirs_path 2> /dev/null || true;;
+	list)
+		find . -type f;;
+	move)
+		test -f ./$2 && test ! -f ./$3
+		mkdir -p $(dirname ./$3)
+		mv ./$2 ./$3;;
+	remove)
+		test -e ./$2 && rm -rf "./$2";;
+	help)
+		display_help;;
+	*)
+		display_help
+		exit 1;;
+esac
