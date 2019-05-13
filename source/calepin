@@ -14,9 +14,9 @@ function display_help {
 	EOF
 }
 
-folder_path="$NOTES_PATH"
-if [[ -z $NOTES_PATH ]]; then
-	folder_path="$HOME/.notes"
+folder_path="$CALEPIN_PATH"
+if [[ -z $CALEPIN_PATH ]]; then
+	folder_path="$HOME/.calepin"
 fi
 
 if ! [[ -d $folder_path ]]; then
