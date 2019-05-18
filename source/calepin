@@ -1,8 +1,8 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-function display_help {
+display_help() {
 	cat <<-EOF
-	Usage: `basename $0` COMMAND [ARGS...]
+	Usage: $(basename "$0") COMMAND [ARGS...]
 
 	Commands:
 	  read		Print a note to STDOUT.
@@ -14,34 +14,36 @@ function display_help {
 	EOF
 }
 
-folder_path="$CALEPIN_PATH"
-if [[ -z $CALEPIN_PATH ]]; then
-	folder_path="$HOME/.calepin"
+clean_directory() {
+	find . -depth -type d -exec rmdir {} \; 2> /dev/null
+}
+
+if [ -z "$CALEPIN_PATH" ]; then
+	CALEPIN_PATH="$HOME/.calepin"
 fi
 
-if ! [[ -d $folder_path ]]; then
-	mkdir -p $folder_path
-	echo "Create <$folder_path>."
+if ! [ -d "$CALEPIN_PATH" ]; then
+	mkdir -p "$CALEPIN_PATH"
+	echo "Create <$CALEPIN_PATH>."
 fi
 
-cd $folder_path
+cd "$CALEPIN_PATH" || exit
 
 case $1 in
 	read)
-		test -f ./$2 && cat "./$2";;
+		[ -f "./$2" ] && cat "./$2";;
 	write)
-		dirs_path=$(dirname ./$2)
-		mkdir -p $dirs_path
-		$EDITOR "./$2"
-		rmdir $dirs_path 2> /dev/null || true;;
+		mkdir -p "$(dirname "./$2")"
+		"$EDITOR" "./$2" && clean_directory;;
 	list)
 		find . -type f;;
 	move)
-		test -f ./$2 && test ! -f ./$3
-		mkdir -p $(dirname ./$3)
-		mv ./$2 ./$3;;
+		if [ -f "./$2" ] && ! [ -f "./$3" ]; then
+			mkdir -p "$(dirname "./$3")"
+			mv "./$2" "./$3" && clean_directory
+		fi;;
 	remove)
-		test -e ./$2 && rm -rf "./$2";;
+		[ -e "./$2" ] && rm -rf "./$2" && clean_directory;;
 	help)
 		display_help;;
 	*)
