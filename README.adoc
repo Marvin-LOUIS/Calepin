@@ -1,4 +1,0 @@
-= Calepin
-
-Calepin is a very simple script inspired by the use one might have of notebooks.
-The idea being to store anything you want and find it easily.

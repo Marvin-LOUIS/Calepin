@@ -27,3 +27,5 @@ quick-run: run clean
 
 install: source/*
 	@sudo install -o root -g root -m 755 source/* -t /usr/local/bin
+	@sudo install -o root -g root -m 644 completion/_calepin -t \
+		/usr/share/zsh/site-functions
