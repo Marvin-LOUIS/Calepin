@@ -2,7 +2,7 @@
 
 display_help() {
 	cat <<-EOF
-	Usage: $(basename "$0") COMMAND [ARGS...]
+	Usage: $(basename "$0") [OPTIONS] COMMAND [ARGS...]
 
 	Commands:
 	  read		Print a note to STDOUT.
@@ -10,7 +10,9 @@ display_help() {
 	  list		List all the notes.
 	  move		Rename a note.
 	  remove	Delete a note.
-	  help		Display the help.
+
+	Options:
+	  -h|--help	Display the help.
 	EOF
 }
 
@@ -44,7 +46,7 @@ case $1 in
 		fi;;
 	remove)
 		[ -e "./$2" ] && rm -rf "./$2" && clean_directory;;
-	help)
+	-h|--help)
 		display_help;;
 	*)
 		display_help
