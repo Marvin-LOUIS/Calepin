@@ -24,6 +24,10 @@ if [ -z "$CALEPIN_PATH" ]; then
 	CALEPIN_PATH="$HOME/.calepin"
 fi
 
+if [ -z "$CALEPIN_EXT" ]; then
+	CALEPIN_EXT="txt"
+fi
+
 if ! [ -d "$CALEPIN_PATH" ]; then
 	mkdir -p "$CALEPIN_PATH"
 	echo "Create <$CALEPIN_PATH>."
@@ -33,19 +37,19 @@ cd "$CALEPIN_PATH" || exit
 
 case $1 in
 	read)
-		[ -f "./$2" ] && cat "./$2";;
+		[ -f "./$2.$CALEPIN_EXT" ] && cat "./$2.$CALEPIN_EXT";;
 	write)
 		mkdir -p "$(dirname "./$2")"
-		"$EDITOR" "./$2" && clean_directory;;
+		! [ -z "$2" ] && "$EDITOR" "./$2.$CALEPIN_EXT" && clean_directory;;
 	list)
-		find . -type f;;
+		find . -type f -name "*.$CALEPIN_EXT" | rev | cut -f 2- -d '.' | rev;;
 	move)
-		if [ -f "./$2" ] && ! [ -f "./$3" ]; then
-			mkdir -p "$(dirname "./$3")"
-			mv "./$2" "./$3" && clean_directory
+		if [ -f "./$2.$CALEPIN_EXT" ] && ! [ -f "./$3.$CALEPIN_EXT" ]; then
+			mkdir -p "$(dirname "./$3.$CALEPIN_EXT")"
+			mv "./$2.$CALEPIN_EXT" "./$3.$CALEPIN_EXT" && clean_directory
 		fi;;
 	remove)
-		[ -e "./$2" ] && rm -rf "./$2" && clean_directory;;
+		[ -e "./$2.$CALEPIN_EXT" ] && rm -rf "./$2.$CALEPIN_EXT" && clean_directory;;
 	-h|--help)
 		display_help;;
 	*)
