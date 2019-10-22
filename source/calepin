@@ -8,6 +8,7 @@ display_help() {
 	  read		Print a note to STDOUT.
 	  write		Create or edit a note.
 	  list		List all the notes.
+	  path		Print the path to the note.
 	  move		Rename a note.
 	  remove	Delete a note.
 
@@ -22,6 +23,8 @@ clean_directory() {
 
 if [ -z "$CALEPIN_PATH" ]; then
 	CALEPIN_PATH="$HOME/.calepin"
+else
+	CALEPIN_PATH=${CALEPIN_PATH%/}
 fi
 
 if [ -z "$CALEPIN_EXT" ]; then
@@ -43,6 +46,8 @@ case $1 in
 		! [ -z "$2" ] && "$EDITOR" "./$2.$CALEPIN_EXT" && clean_directory;;
 	list)
 		find . -type f -name "*.$CALEPIN_EXT" | rev | cut -f 2- -d '.' | rev;;
+	path)
+		[ -f "./$2.$CALEPIN_EXT" ] && echo "$CALEPIN_PATH/$2.$CALEPIN_EXT";;
 	move)
 		if [ -f "./$2.$CALEPIN_EXT" ] && ! [ -f "./$3.$CALEPIN_EXT" ]; then
 			mkdir -p "$(dirname "./$3.$CALEPIN_EXT")"

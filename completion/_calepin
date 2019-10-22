@@ -11,10 +11,10 @@ if [ -z "$CALEPIN_EXT" ]; then
 fi
 
 _arguments -C \
-	"1:action:(read write list move remove -h --help)" \
+	"1:action:(read write list path move remove -h --help)" \
 	"*::arg:->args"
 
 case $line[1] in
-	"read"|"write"|"move"|"remove")
+	"read"|"write"|"path"|"move"|"remove")
 		_arguments "1:notes:_files -W $CALEPIN_PATH -g '*.$CALEPIN_EXT(:r)'";;
 esac
